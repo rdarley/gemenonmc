@@ -1,0 +1,76 @@
+# fly.toml app configuration file generated for gemenonmc on 2024-06-23T00:26:06-05:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'gemenonmc'
+primary_region = 'dfw'
+kill_signal = 'SIGTERM'
+kill_timeout = '2m0s'
+
+[experimental]
+
+[build]
+  image = 'itzg/minecraft-server:latest'
+
+[deploy]
+  wait_timeout = '5m0s'
+
+[env]
+  AUTOSTOP_PKILL_USE_SUDO = 'TRUE'
+  AUTOSTOP_TIMEOUT_EST = '300'
+  AUTOSTOP_TIMEOUT_INIT = '300'
+  DIFFICULTY = 'peaceful'
+  ENABLE_AUTOSTOP = 'TRUE'
+  EULA = 'TRUE'
+  INIT_MEMORY = '3G'
+  MAX_MEMORY = '5G'
+  MODE = 'creative'
+  MOTD = 'Creative Server'
+  OPS = 'DarlesBarkley'
+  PLUGINS = 'https://download.geysermc.org/v2/projects/geyser/versions/latest/builds/latest/downloads/spigot,https://download.geysermc.org/v2/projects/floodgate/versions/latest/builds/latest/downloads/spigot'
+  TYPE = 'PAPER'
+  PAPER_CHANNEL = 'experimental'
+  WHITELIST = 'DarlesBarkley'
+
+[[mounts]]
+  source = 'minecraft_data'
+  destination = '/data'
+  initial_size = '5GB'
+
+[[services]]
+  protocol = 'tcp'
+  internal_port = 25565
+  auto_stop_machines = false
+  auto_start_machines = true
+  min_machines_running = 0
+
+  [[services.ports]]
+    port = 25565
+
+[[services]]
+  protocol = 'udp'
+  internal_port = 19132
+
+  [[services.ports]]
+    port = 19132
+
+[[services]]
+  protocol = 'udp'
+  internal_port = 19133
+
+  [[services.ports]]
+    port = 19133
+
+[checks]
+  [checks.minecraft_server_tcp_check]
+    port = 25565
+    type = 'tcp'
+    interval = '30s'
+    timeout = '20s'
+    grace_period = '30s'
+
+[[vm]]
+  memory = '6gb'
+  cpu_kind = 'shared'
+  cpus = 4
